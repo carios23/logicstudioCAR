@@ -18,6 +18,7 @@ namespace Solucion_CAR.Models
         public Factura()
         {
             this.Detalles = new HashSet<Detalle>();
+            this.Pagoes = new HashSet<Pago>();
         }
     
         public System.Guid facturaId { get; set; }
@@ -27,5 +28,7 @@ namespace Solucion_CAR.Models
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Detalle> Detalles { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Pago> Pagoes { get; set; }
     }
 }

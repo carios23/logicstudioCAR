@@ -27,5 +27,6 @@ namespace Solucion_CAR.Models
     
         public virtual DbSet<Detalle> Detalles { get; set; }
         public virtual DbSet<Factura> Facturas { get; set; }
+        public virtual DbSet<Pago> Pagoes { get; set; }
     }
 }

@@ -24,6 +24,15 @@
           <Property Name="monto" Type="decimal" Precision="18" Scale="2" />
           <Property Name="numerodefactura" Type="int" />
         </EntityType>
+        <EntityType Name="Pago">
+          <Key>
+            <PropertyRef Name="pagosId" />
+          </Key>
+          <Property Name="pagosId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="facturaId" Type="uniqueidentifier" />
+          <Property Name="pagada" Type="bit" />
+          <Property Name="fechadepago" Type="datetime" />
+        </EntityType>
         <Association Name="FK_Detalle_Factura">
           <End Role="Factura" Type="Self.Factura" Multiplicity="0..1" />
           <End Role="Detalle" Type="Self.Detalle" Multiplicity="*" />
@@ -36,12 +45,29 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Pago_Factura">
+          <End Role="Factura" Type="Self.Factura" Multiplicity="0..1" />
+          <End Role="Pago" Type="Self.Pago" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Factura">
+              <PropertyRef Name="facturaId" />
+            </Principal>
+            <Dependent Role="Pago">
+              <PropertyRef Name="facturaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="BaseDatos_CARModelStoreContainer">
           <EntitySet Name="Detalle" EntityType="Self.Detalle" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Factura" EntityType="Self.Factura" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Pago" EntityType="Self.Pago" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Detalle_Factura" Association="Self.FK_Detalle_Factura">
             <End Role="Factura" EntitySet="Factura" />
             <End Role="Detalle" EntitySet="Detalle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pago_Factura" Association="Self.FK_Pago_Factura">
+            <End Role="Factura" EntitySet="Factura" />
+            <End Role="Pago" EntitySet="Pago" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -51,9 +77,14 @@
         <EntityContainer Name="BaseDatos_CAREntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Detalles" EntityType="BaseDatos_CARModel.Detalle" />
           <EntitySet Name="Facturas" EntityType="BaseDatos_CARModel.Factura" />
+          <EntitySet Name="Pagoes" EntityType="BaseDatos_CARModel.Pago" />
           <AssociationSet Name="FK_Detalle_Factura" Association="BaseDatos_CARModel.FK_Detalle_Factura">
             <End Role="Factura" EntitySet="Facturas" />
             <End Role="Detalle" EntitySet="Detalles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pago_Factura" Association="BaseDatos_CARModel.FK_Pago_Factura">
+            <End Role="Factura" EntitySet="Facturas" />
+            <End Role="Pago" EntitySet="Pagoes" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Detalle">
@@ -76,6 +107,17 @@
           <Property Name="monto" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="numerodefactura" Type="Int32" />
           <NavigationProperty Name="Detalles" Relationship="BaseDatos_CARModel.FK_Detalle_Factura" FromRole="Factura" ToRole="Detalle" />
+          <NavigationProperty Name="Pagoes" Relationship="BaseDatos_CARModel.FK_Pago_Factura" FromRole="Factura" ToRole="Pago" />
+        </EntityType>
+        <EntityType Name="Pago">
+          <Key>
+            <PropertyRef Name="pagosId" />
+          </Key>
+          <Property Name="pagosId" Type="Guid" Nullable="false" />
+          <Property Name="facturaId" Type="Guid" />
+          <Property Name="pagada" Type="Boolean" />
+          <Property Name="fechadepago" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Factura" Relationship="BaseDatos_CARModel.FK_Pago_Factura" FromRole="Pago" ToRole="Factura" />
         </EntityType>
         <Association Name="FK_Detalle_Factura">
           <End Type="BaseDatos_CARModel.Factura" Role="Factura" Multiplicity="0..1" />
@@ -85,6 +127,18 @@
               <PropertyRef Name="facturaId" />
             </Principal>
             <Dependent Role="Detalle">
+              <PropertyRef Name="facturaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pago_Factura">
+          <End Type="BaseDatos_CARModel.Factura" Role="Factura" Multiplicity="0..1" />
+          <End Type="BaseDatos_CARModel.Pago" Role="Pago" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Factura">
+              <PropertyRef Name="facturaId" />
+            </Principal>
+            <Dependent Role="Pago">
               <PropertyRef Name="facturaId" />
             </Dependent>
           </ReferentialConstraint>
@@ -113,6 +167,16 @@
                 <ScalarProperty Name="monto" ColumnName="monto" />
                 <ScalarProperty Name="nombrecliente" ColumnName="nombrecliente" />
                 <ScalarProperty Name="facturaId" ColumnName="facturaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Pagoes">
+            <EntityTypeMapping TypeName="BaseDatos_CARModel.Pago">
+              <MappingFragment StoreEntitySet="Pago">
+                <ScalarProperty Name="fechadepago" ColumnName="fechadepago" />
+                <ScalarProperty Name="pagada" ColumnName="pagada" />
+                <ScalarProperty Name="facturaId" ColumnName="facturaId" />
+                <ScalarProperty Name="pagosId" ColumnName="pagosId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
