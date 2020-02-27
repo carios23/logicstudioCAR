@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="BaseDatos_CARModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Detalle">
+          <Key>
+            <PropertyRef Name="detalleId" />
+          </Key>
+          <Property Name="detalleId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="articulo" Type="nvarchar(max)" />
+          <Property Name="cantidad" Type="int" />
+          <Property Name="monto" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="facturaId" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="Factura">
+          <Key>
+            <PropertyRef Name="facturaId" />
+          </Key>
+          <Property Name="facturaId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="nombrecliente" Type="varchar(max)" />
+          <Property Name="monto" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="numerodefactura" Type="int" />
+        </EntityType>
+        <Association Name="FK_Detalle_Factura">
+          <End Role="Factura" Type="Self.Factura" Multiplicity="0..1" />
+          <End Role="Detalle" Type="Self.Detalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Factura">
+              <PropertyRef Name="facturaId" />
+            </Principal>
+            <Dependent Role="Detalle">
+              <PropertyRef Name="facturaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BaseDatos_CARModelStoreContainer">
+          <EntitySet Name="Detalle" EntityType="Self.Detalle" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Factura" EntityType="Self.Factura" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Detalle_Factura" Association="Self.FK_Detalle_Factura">
+            <End Role="Factura" EntitySet="Factura" />
+            <End Role="Detalle" EntitySet="Detalle" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BaseDatos_CARModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="BaseDatos_CAREntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Detalles" EntityType="BaseDatos_CARModel.Detalle" />
+          <EntitySet Name="Facturas" EntityType="BaseDatos_CARModel.Factura" />
+          <AssociationSet Name="FK_Detalle_Factura" Association="BaseDatos_CARModel.FK_Detalle_Factura">
+            <End Role="Factura" EntitySet="Facturas" />
+            <End Role="Detalle" EntitySet="Detalles" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Detalle">
+          <Key>
+            <PropertyRef Name="detalleId" />
+          </Key>
+          <Property Name="detalleId" Type="Guid" Nullable="false" />
+          <Property Name="articulo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="cantidad" Type="Int32" />
+          <Property Name="monto" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="facturaId" Type="Guid" />
+          <NavigationProperty Name="Factura" Relationship="BaseDatos_CARModel.FK_Detalle_Factura" FromRole="Detalle" ToRole="Factura" />
+        </EntityType>
+        <EntityType Name="Factura">
+          <Key>
+            <PropertyRef Name="facturaId" />
+          </Key>
+          <Property Name="facturaId" Type="Guid" Nullable="false" />
+          <Property Name="nombrecliente" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="monto" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="numerodefactura" Type="Int32" />
+          <NavigationProperty Name="Detalles" Relationship="BaseDatos_CARModel.FK_Detalle_Factura" FromRole="Factura" ToRole="Detalle" />
+        </EntityType>
+        <Association Name="FK_Detalle_Factura">
+          <End Type="BaseDatos_CARModel.Factura" Role="Factura" Multiplicity="0..1" />
+          <End Type="BaseDatos_CARModel.Detalle" Role="Detalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Factura">
+              <PropertyRef Name="facturaId" />
+            </Principal>
+            <Dependent Role="Detalle">
+              <PropertyRef Name="facturaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BaseDatos_CARModelStoreContainer" CdmEntityContainer="BaseDatos_CAREntities">
+          <EntitySetMapping Name="Detalles">
+            <EntityTypeMapping TypeName="BaseDatos_CARModel.Detalle">
+              <MappingFragment StoreEntitySet="Detalle">
+                <ScalarProperty Name="facturaId" ColumnName="facturaId" />
+                <ScalarProperty Name="monto" ColumnName="monto" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+                <ScalarProperty Name="articulo" ColumnName="articulo" />
+                <ScalarProperty Name="detalleId" ColumnName="detalleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Facturas">
+            <EntityTypeMapping TypeName="BaseDatos_CARModel.Factura">
+              <MappingFragment StoreEntitySet="Factura">
+                <ScalarProperty Name="numerodefactura" ColumnName="numerodefactura" />
+                <ScalarProperty Name="monto" ColumnName="monto" />
+                <ScalarProperty Name="nombrecliente" ColumnName="nombrecliente" />
+                <ScalarProperty Name="facturaId" ColumnName="facturaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
