@@ -16,7 +16,7 @@ namespace Solucion_CAR.Models
     {
         public System.Guid pagosId { get; set; }
         public Nullable<System.Guid> facturaId { get; set; }
-        public Nullable<bool> pagada { get; set; }
+        public Nullable<decimal> monto { get; set; }
         public Nullable<System.DateTime> fechadepago { get; set; }
     
         public virtual Factura Factura { get; set; }
