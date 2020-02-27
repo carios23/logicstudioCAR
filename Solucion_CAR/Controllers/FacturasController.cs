@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Solucion_CAR.Models;
@@ -15,114 +16,144 @@ namespace Solucion_CAR.Controllers
         private BaseDatos_CAREntities db = new BaseDatos_CAREntities();
 
         // GET: Facturas
-        public ActionResult Index()
+        //public ActionResult Index()
+        //{
+        //    return View(db.Facturas.ToList());
+        //}
+
+    
+        public async Task<ActionResult> Index(string searchString)
         {
-            return View(db.Facturas.ToList());
+
+            FacturaMasterDetailModel model = new FacturaMasterDetailModel();
+
+
+            Int32.TryParse(searchString,out int facturano );
+
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                model.Factura = db.Facturas.Where(s => s.numerodefactura == facturano).SingleOrDefault();
+                
+                if (model.Factura !=null)
+                { 
+                model.Detalles = db.Detalles.Where(d => d.facturaId == model.Factura.facturaId).ToList();
+                model.Pagoes = db.Pagoes.Where(p => p.facturaId == model.Factura.facturaId).ToList();
+
+                    model.Saldo = model.Detalles.Sum(s => s.monto) - model.Pagoes.Sum(l => l.monto);
+                }
+
+            }
+            return View(model);
+
+
+            // return View(await model.ToListAsync());
         }
 
-        // GET: Facturas/Details/5
-        public ActionResult Details(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Factura factura = db.Facturas.Find(id);
-            if (factura == null)
-            {
-                return HttpNotFound();
-            }
-            return View(factura);
-        }
 
-        // GET: Facturas/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+        //// GET: Facturas/Details/5
+        //public ActionResult Details(Guid? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Factura factura = db.Facturas.Find(id);
+        //    if (factura == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(factura);
+        //}
 
-        // POST: Facturas/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "facturaId,nombrecliente,monto,numerodefactura")] Factura factura)
-        {
-            if (ModelState.IsValid)
-            {
-                factura.facturaId = Guid.NewGuid();
-                db.Facturas.Add(factura);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+        //// GET: Facturas/Create
+        //public ActionResult Create()
+        //{
+        //    return View();
+        //}
 
-            return View(factura);
-        }
+        //// POST: Facturas/Create
+        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //// more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create([Bind(Include = "facturaId,nombrecliente,monto,numerodefactura")] Factura factura)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        factura.facturaId = Guid.NewGuid();
+        //        db.Facturas.Add(factura);
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
 
-        // GET: Facturas/Edit/5
-        public ActionResult Edit(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Factura factura = db.Facturas.Find(id);
-            if (factura == null)
-            {
-                return HttpNotFound();
-            }
-            return View(factura);
-        }
+        //    return View(factura);
+        //}
 
-        // POST: Facturas/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "facturaId,nombrecliente,monto,numerodefactura")] Factura factura)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(factura).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(factura);
-        }
+        //// GET: Facturas/Edit/5
+        //public ActionResult Edit(Guid? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Factura factura = db.Facturas.Find(id);
+        //    if (factura == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(factura);
+        //}
 
-        // GET: Facturas/Delete/5
-        public ActionResult Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Factura factura = db.Facturas.Find(id);
-            if (factura == null)
-            {
-                return HttpNotFound();
-            }
-            return View(factura);
-        }
+        //// POST: Facturas/Edit/5
+        //// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        //// more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit([Bind(Include = "facturaId,nombrecliente,monto,numerodefactura")] Factura factura)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Entry(factura).State = EntityState.Modified;
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+        //    return View(factura);
+        //}
 
-        // POST: Facturas/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(Guid id)
-        {
-            Factura factura = db.Facturas.Find(id);
-            db.Facturas.Remove(factura);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+        //// GET: Facturas/Delete/5
+        //public ActionResult Delete(Guid? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Factura factura = db.Facturas.Find(id);
+        //    if (factura == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(factura);
+        //}
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        //// POST: Facturas/Delete/5
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult DeleteConfirmed(Guid id)
+        //{
+        //    Factura factura = db.Facturas.Find(id);
+        //    db.Facturas.Remove(factura);
+        //    db.SaveChanges();
+        //    return RedirectToAction("Index");
+        //}
+
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        db.Dispose();
+        //    }
+        //    base.Dispose(disposing);
+        //}
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Solucion_CAR.Models.Factura>
+﻿@model Solucion_CAR.Models.FacturaMasterDetailModel
 
 @{
     ViewBag.Title = "Index";
@@ -10,37 +10,113 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+
+
+<form asp-controller="Facturas" asp-action="Index">
+    <p>
+        Numero de Factura: <input type="text" name="SearchString">
+        <input type="submit" value="Filtrar" />
+    </p>
+</form>
+
+
 <table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.nombrecliente)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.monto)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.numerodefactura)
-        </th>
-        <th></th>
-    </tr>
+    @if (Model.Factura != null)
+    {
+        <tr>
+            <th>
+                Factura No
+            </th>
+            <th>
+                Cliente
+            </th>
+            <th>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.nombrecliente)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.monto)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.numerodefactura)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.facturaId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.facturaId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.facturaId })
-        </td>
-    </tr>
-}
+            </th>
 
-</table>
+            <th></th>
+        </tr>
+
+
+
+        <tr>
+            <td>
+                @Html.DisplayFor(model => model.Factura.numerodefactura)
+            </td>
+            <td>
+                @Html.DisplayFor(model => model.Factura.nombrecliente)
+            </td>
+            <td>
+            </td>
+
+            <td>
+            </td>
+        </tr>
+
+    }
+
+        @if (Model.Detalles != null)
+        {
+
+            <tr><td> Articulos</td></tr>
+
+            foreach (var item in Model.Detalles)
+            {
+
+
+                <tr>
+                    <td></td>
+                    <td>
+                        Articulo @Html.DisplayFor(modelItem => item.articulo),
+
+                        Precio  $@Html.DisplayFor(modelItem => item.precio),
+
+                        Cantidad  @Html.DisplayFor(modelItem => item.cantidad),
+
+                        Total   @Html.DisplayFor(( modelItem => item.monto) )
+
+
+                    </td>
+                </tr>
+
+            }
+
+
+            <tr><td> EL SALDO POR PAGAR   </td> <td>@Html.DisplayFor(model => model.Saldo)</td> </tr>
+
+        }
+
+        @if (Model.Pagoes != null)
+        {
+
+            <tr><td>Pagos</td> </tr>
+
+            foreach (var item in Model.Pagoes)
+            {
+                <tr>
+                    <td></td>
+                    <td>
+                        Fecha de Pago @Html.DisplayFor(modelItem => item.fechadepago),
+
+                        Pago  $@Html.DisplayFor(modelItem => item.monto),
+
+                    </td>
+                </tr>
+
+            }
+
+        }
+        else
+        {
+            if (Model.Factura != null)
+            {
+                <tr><td>NO HAY PAGOS RECIBIDOS.</td> </tr>
+            }
+
+
+        }
+
+        <tr><td>Crear @Html.ActionLink("Pagos", "Index", "Pagoes")</td> </tr>
+
+
+    </table>

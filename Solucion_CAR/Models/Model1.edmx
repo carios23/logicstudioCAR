@@ -14,6 +14,7 @@
           <Property Name="cantidad" Type="int" />
           <Property Name="monto" Type="decimal" Precision="18" Scale="2" />
           <Property Name="facturaId" Type="uniqueidentifier" />
+          <Property Name="precio" Type="decimal" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="Factura">
           <Key>
@@ -30,7 +31,7 @@
           </Key>
           <Property Name="pagosId" Type="uniqueidentifier" Nullable="false" />
           <Property Name="facturaId" Type="uniqueidentifier" />
-          <Property Name="monto" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="monto" Type="decimal" Precision="18" Scale="2" />
           <Property Name="fechadepago" Type="datetime" />
         </EntityType>
         <Association Name="FK_Detalle_Factura">
@@ -97,6 +98,7 @@
           <Property Name="monto" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="facturaId" Type="Guid" />
           <NavigationProperty Name="Factura" Relationship="BaseDatos_CARModel.FK_Detalle_Factura" FromRole="Detalle" ToRole="Factura" />
+          <Property Name="precio" Type="Decimal" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="Factura">
           <Key>
@@ -115,7 +117,7 @@
           </Key>
           <Property Name="pagosId" Type="Guid" Nullable="false" />
           <Property Name="facturaId" Type="Guid" />
-          <Property Name="monto" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="monto" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="fechadepago" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Factura" Relationship="BaseDatos_CARModel.FK_Pago_Factura" FromRole="Pago" ToRole="Factura" />
         </EntityType>
@@ -152,6 +154,7 @@
           <EntitySetMapping Name="Detalles">
             <EntityTypeMapping TypeName="BaseDatos_CARModel.Detalle">
               <MappingFragment StoreEntitySet="Detalle">
+                <ScalarProperty Name="precio" ColumnName="precio" />
                 <ScalarProperty Name="facturaId" ColumnName="facturaId" />
                 <ScalarProperty Name="monto" ColumnName="monto" />
                 <ScalarProperty Name="cantidad" ColumnName="cantidad" />

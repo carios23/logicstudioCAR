@@ -19,6 +19,7 @@ namespace Solucion_CAR.Models
         public Nullable<int> cantidad { get; set; }
         public Nullable<decimal> monto { get; set; }
         public Nullable<System.Guid> facturaId { get; set; }
+        public Nullable<decimal> precio { get; set; }
     
         public virtual Factura Factura { get; set; }
     }
