@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Solucion_CAR.Models.Pago>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.monto)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.fechadepago)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Factura.nombrecliente)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.monto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.fechadepago)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Factura.nombrecliente)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.pagosId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.pagosId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.pagosId })
+        </td>
+    </tr>
+}
+
+</table>
